@@ -107,14 +107,16 @@ def get_aur_yaourt_updates():
     return aur_updates
 
 def get_aur_yay_updates():
-    output = check_output(['yay', '-Qua']).decode('utf-8')
-    if not output:
+    try:
+        output = check_output(['yay', '-Qua']).decode('utf-8')
+        if not output:
+            return []
+
+        aur_updates = [line.split(' ')[0] for line in output.split('\n') if line]
+
+        return aur_updates
+    except:
         return []
-
-    aur_updates = [line.split(' ')[0] for line in output.split('\n') if line]
-
-    return aur_updates
-
 
 def matching_updates(updates, watch_list):
     matches = set()
